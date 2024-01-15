@@ -1,0 +1,41 @@
+[data-theme='dark'],
+.dark {
+  --background: 0 0% 0%; 
+  --foreground: 0 0% 100%; 
+
+  --muted: 0 0% 20%; 
+  --muted-foreground: 0 0% 80%; 
+
+  --popover: 0 0% 0%; 
+  --popover-foreground: 0 0% 100%; 
+
+  --border: 0 0% 10%; 
+  --input: 0 0% 10%; 
+
+  --card: 0 0% 0%; /* Update to the desired dark card color */
+  --card-foreground: 0 0% 100%; /* Update to the desired dark card foreground color */
+
+  --default: 0 0% 100%; /* Update to the desired dark default color */
+  --default-foreground: 0 0% 0%; /* Update to the desired dark default foreground color */
+
+  --primary: 0 0% 50%; /* Update to the desired dark primary color */
+  --primary-foreground: 0 0% 100%; /* Update to the desired dark primary foreground color */
+  --primary-shade-1: 0 0% 40%; /* Update to the desired dark primary shade 1 color */
+  --primary-shade-2: 0 0% 60%; /* Update to the desired dark primary shade 2 color */
+  --primary-shade-3: 0 0% 70%; /* Update to the desired dark primary shade 3 color */
+  --primary-shade-4: 0 0% 80%; /* Update to the desired dark primary shade 4 color */
+  --primary-shade-5: 0 0% 90%; /* Update to the desired dark primary shade 5 color */
+
+  --secondary: 0 0% 20%; /* Update to the desired dark secondary color */
+  --secondary-foreground: 0 0% 100%; /* Update to the desired dark secondary foreground color */
+
+  --accent: 0 0% 20%; /* Update to the desired dark accent color */
+  --accent-foreground: 0 0% 100%; /* Update to the desired dark accent foreground color */
+
+  --destructive: 0 0% 50%; /* Update to the desired dark destructive color */
+  --destructive-foreground: 0 0% 100%; /* Update to the desired dark destructive foreground color */
+
+  --ring: 0 0% 65.1%; /* Update to the desired dark ring color */
+
+  --radius: 0.5rem;
+}

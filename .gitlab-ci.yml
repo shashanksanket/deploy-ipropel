@@ -1,0 +1,56 @@
+image: node:18
+
+variables:
+  DOCKER_IMAGE_NAME: registry.ipropel.co.in/ipropel/ipropel-front-end
+  DOCKER_REGISTRY: registry.ipropel.co.in
+  DEPLOY_ENV_PROD: "main"
+  TIMESTAMP: ${CI_PIPELINE_IID}
+
+stages:
+  - lint
+  - build
+  - deploy
+
+before_script:
+  - apt-get update -qy
+  - curl -s https://deb.nodesource.com/setup_18.x | bash
+  - apt install nodejs -y
+  - corepack enable && corepack prepare pnpm@latest-8 --activate && pnpm config set store-dir ~/.pnpm-store
+
+lint:
+  stage: lint
+  script:
+    - pnpm install --prefer-offline
+    - pnpm run lint
+  cache:
+    key:
+      files:
+        - pnpm-lock.yaml
+    paths:
+      - .pnpm-store
+      - node_modules
+  except:
+    - main
+    - develop
+
+deploy:
+  stage: deploy
+  image: docker/compose:latest
+  services:
+    - docker:dind
+  before_script: []
+  script:
+    - docker --version
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $DOCKER_REGISTRY
+    - if [ "$CI_COMMIT_REF_NAME" == "main" ]; then export DEPLOY_ENV_PROD="main"; else export DEPLOY_ENV_PROD="dev"; fi
+    - docker network create app_network || true  # Create the network
+    - docker compose -f docker-compose.yml build web
+    - docker tag web:latest $DOCKER_IMAGE_NAME/web:$DEPLOY_ENV_PROD-$TIMESTAMP  # Tag the image
+    - docker compose -f docker-compose.yml up -d
+    - docker push $DOCKER_IMAGE_NAME/web:$DEPLOY_ENV_PROD-$TIMESTAMP
+    - docker compose -f docker-compose.yml build docs
+    - docker tag docs:latest $DOCKER_IMAGE_NAME/docs:$DEPLOY_ENV_PROD-$TIMESTAMP  # Tag the image
+    - docker push $DOCKER_IMAGE_NAME/docs:$DEPLOY_ENV_PROD-$TIMESTAMP
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_COMMIT_REF_NAME == "develop"'
